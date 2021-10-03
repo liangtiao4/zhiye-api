@@ -8,12 +8,6 @@ const login = (email, password) => {
   return execSql(sql)
 }
 
-// 用户信息
-const getUser = (id) => {
-  const sql = `select * from table_user where _id = '${id}'`
-  return execSql(sql)
-}
-
 // 邮箱验证
 const validateEmail = (email) => {
   const sql = `select * from table_user where email = '${email}'`
@@ -28,7 +22,6 @@ const register = ({email, password, username}) => {
 
 module.exports = {
   login,
-  getUser,
   validateEmail,
   register
 }

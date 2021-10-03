@@ -1,7 +1,6 @@
 const express = require('express')
 const {
   login,
-  getUser,
   validateEmail,
   register
 } = require('../controller/user')
@@ -26,19 +25,20 @@ router.post('/login', async (req, res) => {
 
 // 用户信息
 router.post('/current', async (req, res) => {
-  const { id } = req.body
-  const result = await getUser(id).then(sqlData => {
-    if (sqlData.length > 0) {
-      const { _id, username } = sqlData[0]
-      return successData('user', {
-        _id,
-        username
-      })
-    }
-    return failData('该用户不存在！')
-  }).catch(err => failData(err))
+  // 解析token
+  const token = req.headers['authorization']
 
-  res.status(201).send(result)
+  const data = await verify.getToken(token)
+  .then(res => {
+    const { _id, username } = res.userinfo
+    return successData('user', {
+      _id,
+      username
+    })
+  })
+  .catch(err => failData(err))
+
+  res.status(201).send(data)
 })
 
 // 验证邮箱是否存在
